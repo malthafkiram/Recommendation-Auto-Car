@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { PiCheckCircle, PiSparkle } from "react-icons/pi";
 import { FcGoogle } from "react-icons/fc"; // Google icon with brand colors
@@ -54,7 +54,9 @@ function Login() {
     }
   }
 
-  // Google Script Initializer — uses initialize only, no renderButton
+  const googleBtnRef = useRef(null);
+
+  // Google Script Initializer
   useEffect(() => {
     if (isMockMode || !googleClientId) return;
 
@@ -64,7 +66,19 @@ function Login() {
       window.google.accounts.id.initialize({
         client_id: googleClientId,
         callback: ({ credential }) => handleCredential(credential),
+        auto_select: false,
       });
+
+      if (googleBtnRef.current) {
+        window.google.accounts.id.renderButton(googleBtnRef.current, {
+          theme: "outline",
+          size: "large",
+          width: "100%",
+          shape: "pill",
+          text: "continue_with",
+        });
+      }
+
       setIsGoogleReady(true);
     }
 
@@ -211,6 +225,7 @@ function Login() {
                 <FcGoogle className="google-btn-icon" />
                 {isSigningIn ? "Signing in..." : "Continue with Google"}
               </button>
+              <div ref={googleBtnRef} className="google-official-btn flex justify-center mt-2 w-full min-h-[40px]" />
               {!googleClientId && (
                 <p className="login-config-error">
                   Google Sign-In is unavailable. Add VITE_GOOGLE_CLIENT_ID to .env

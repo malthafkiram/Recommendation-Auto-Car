@@ -1,6 +1,6 @@
-import { Model } from "mongoloquent";
+import BaseModel from "./BaseModel.js";
 
-export class Car extends Model {
+export class Car extends BaseModel {
   static get collection() {
     return "cars";
   }
@@ -43,3 +43,5 @@ export class Car extends Model {
     return query.where("isTopProduct", true);
   }
 }
+
+export default Car;

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "sr-honda-jakarta-pusat",
+    "name": "Honda Jakarta Center (Pangeran Jayakarta)",
+    "brand": "Honda",
+    "address": "Jl. Pangeran Jayakarta No.107, Mangga Dua Selatan, Sawah Besar, Jakarta Pusat 10730",
+    "latitude": -6.1415,
+    "longitude": 106.8312,
+    "phone": "+62 21 6260555",
+    "mapsUrl": "https://maps.google.com/?q=Honda+Jakarta+Center+Pangeran+Jayakarta",
+    "rating": 4.7
+  },
+  {
+    "id": "sr-toyota-sudirman",
+    "name": "Auto2000 Sudirman Menara Astra",
+    "brand": "Toyota",
+    "address": "Menara Astra, Jl. Jend. Sudirman Kav. 5-6, Karet Tengsin, Tanah Abang, Jakarta Pusat 10220",
+    "latitude": -6.2088,
+    "longitude": 106.8227,
+    "phone": "+62 21 50802000",
+    "mapsUrl": "https://maps.google.com/?q=Auto2000+Sudirman+Menara+Astra",
+    "rating": 4.8
+  },
+  {
+    "id": "sr-honda-pondok-indah",
+    "name": "Honda Pondok Indah",
+    "brand": "Honda",
+    "address": "Jl. Sultan Iskandar Muda No.8, Kebayoran Lama Selatan, Jakarta Selatan 12240",
+    "latitude": -6.2625,
+    "longitude": 106.7845,
+    "phone": "+62 21 7233888",
+    "mapsUrl": "https://maps.google.com/?q=Honda+Pondok+Indah",
+    "rating": 4.6
+  },
+  {
+    "id": "sr-toyota-pluit",
+    "name": "Auto2000 Pluit",
+    "brand": "Toyota",
+    "address": "Jl. Raya Pluit Selatan No.6, Pluit, Penjaringan, Jakarta Utara 14450",
+    "latitude": -6.1264,
+    "longitude": 106.7909,
+    "phone": "+62 21 6672000",
+    "mapsUrl": "https://maps.google.com/?q=Auto2000+Pluit",
+    "rating": 4.7
+  },
+  {
+    "id": "sr-honda-kelapa-gading",
+    "name": "Honda Autoland Kelapa Gading",
+    "brand": "Honda",
+    "address": "Jl. Boulevard Barat Raya Blok XB No.1-2, Kelapa Gading Barat, Jakarta Utara 14240",
+    "latitude": -6.1557,
+    "longitude": 106.8924,
+    "phone": "+62 21 45842888",
+    "mapsUrl": "https://maps.google.com/?q=Honda+Kelapa+Gading",
+    "rating": 4.6
+  },
+  {
+    "id": "sr-toyota-tebet",
+    "name": "Auto2000 Tebet Supomo",
+    "brand": "Toyota",
+    "address": "Jl. Prof. DR. Soepomo No.46, Tebet Barat, Tebet, Jakarta Selatan 12810",
+    "latitude": -6.2334,
+    "longitude": 106.8488,
+    "phone": "+62 21 8302000",
+    "mapsUrl": "https://maps.google.com/?q=Auto2000+Tebet+Supomo",
+    "rating": 4.7
+  }
+]

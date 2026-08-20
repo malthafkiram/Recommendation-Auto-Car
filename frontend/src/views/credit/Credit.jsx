@@ -65,9 +65,12 @@ export default function Credit() {
           }
         }
 
-        if (cars.length > 0 && !selectedCar) {
-          setSelectedCar(cars[0]);
-          setForm((prev) => ({ ...prev, carPrice: Number(cars[0].basePrice) || prev.carPrice }));
+        if (!carIdQuery && cars.length > 0) {
+          setSelectedCar((current) => {
+            if (current) return current;
+            setForm((prev) => ({ ...prev, carPrice: Number(cars[0].basePrice) || prev.carPrice }));
+            return cars[0];
+          });
         }
       } catch {
         // Fallback

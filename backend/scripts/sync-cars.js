@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import fs from "fs";
-import { connectDB } from "../src/database.js";
+import "../src/config/database.js";
+import { connectDB, getDB } from "../src/database.js";
 import { Car } from "../src/models/car.model.js";
 
 dotenv.config();

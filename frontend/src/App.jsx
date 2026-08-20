@@ -21,49 +21,37 @@ function App() {
     <>
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+          <ShowroomProvider>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
-            <Route element={<BaseLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/catalog" element={<Catalog />} />
-              <Route path="/cars/:id" element={<CarDetail />} />
-              <Route
-                path="/recommendation"
-                element={
-                  <ShowroomProvider>
-                    <Recommend />
-                  </ShowroomProvider>
-                }
-              />
-              <Route
-                path="/showrooms"
-                element={
-                  <ShowroomProvider>
-                    <Showrooms />
-                  </ShowroomProvider>
-                }
-              />
-              <Route path="/credit" element={<Credit />} />
-              <Route
-                path="/wishlist"
-                element={
-                  <ProtectedRoute>
-                    <Wishlist />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/upgrade"
-                element={
-                  <ProtectedRoute>
-                    <Upgrade />
-                  </ProtectedRoute>
-                }
-              />
-            </Route>
-          </Routes>
+              <Route element={<BaseLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/catalog" element={<Catalog />} />
+                <Route path="/cars/:id" element={<CarDetail />} />
+                <Route path="/recommendation" element={<Recommend />} />
+                <Route path="/showrooms" element={<Showrooms />} />
+                <Route path="/credit" element={<Credit />} />
+                <Route
+                  path="/wishlist"
+                  element={
+                    <ProtectedRoute>
+                      <Wishlist />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/upgrade"
+                  element={
+                    <ProtectedRoute>
+                      <Upgrade />
+                    </ProtectedRoute>
+                  }
+                />
+              </Route>
+            </Routes>
+          </ShowroomProvider>
         </AuthProvider>
       </BrowserRouter>
       <ToastContainer

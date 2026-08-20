@@ -10,10 +10,128 @@ import { sendChatMessage } from "../../api/ai";
 import AiAccessPrompt from "../shared/AiAccessPrompt";
 import useAuth from "../../context/useAuth";
 
+// Helper to render formatted inline text (links, bold, italic)
+function renderInlineFormatting(text) {
+  if (!text) return "";
+  const tokenRegex = /(\[[^\]]+\]\([^)]+\)|\*\*[^*]+\*\*|\*[^*]+\*)/g;
+  const parts = text.split(tokenRegex);
+
+  return parts.map((part, index) => {
+    // Markdown link [Label](url)
+    if (part.startsWith("[") && part.includes("](") && part.endsWith(")")) {
+      const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      if (match) {
+        const label = match[1];
+        const url = match[2];
+        const isExternal = url.startsWith("http");
+        return (
+          <Link
+            key={index}
+            to={url}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            className="inline-flex items-center gap-1 font-semibold text-blue-400 hover:text-blue-300 hover:underline my-0.5"
+          >
+            <span>{label}</span>
+            <PiArrowSquareOut className="text-[11px] inline" />
+          </Link>
+        );
+      }
+    }
+
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return (
+        <strong key={index} className="font-bold text-white">
+          {part.slice(2, -2)}
+        </strong>
+      );
+    }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return (
+        <em key={index} className="italic text-gray-300">
+          {part.slice(1, -1)}
+        </em>
+      );
+    }
+    return part;
+  });
+}
+
+// Formatter component to display clean chat messages without raw markdown artifacts
+function FormattedMessage({ text }) {
+  if (!text) return null;
+
+  const lines = text.split("\n");
+
+  return (
+    <div className="space-y-1.5 leading-relaxed text-xs">
+      {lines.map((line, idx) => {
+        const trimmed = line.trim();
+
+        // Skip table separator line |---|---|
+        if (/^\|[-:| ]+\|$/.test(trimmed) || /^[-:| ]{3,}$/.test(trimmed)) {
+          return null;
+        }
+
+        // Convert table row | Col1 | Col2 | into clean pill list
+        if (trimmed.startsWith("|") && trimmed.endsWith("|")) {
+          const cells = trimmed
+            .split("|")
+            .map((c) => c.trim())
+            .filter(Boolean);
+          if (cells.length === 0) return null;
+          return (
+            <div
+              key={idx}
+              className="my-1.5 flex flex-wrap items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 p-2"
+            >
+              {cells.map((cell, cIdx) => (
+                <span
+                  key={cIdx}
+                  className="rounded-md bg-white/10 px-2 py-0.5 text-[11px] font-medium text-gray-200"
+                >
+                  {renderInlineFormatting(cell)}
+                </span>
+              ))}
+            </div>
+          );
+        }
+
+        // Handle bullet points
+        const isBullet =
+          trimmed.startsWith("•") ||
+          trimmed.startsWith("- ") ||
+          trimmed.startsWith("* ");
+        const content = isBullet ? trimmed.replace(/^[•\-*]\s*/, "") : line;
+
+        if (isBullet) {
+          return (
+            <div key={idx} className="flex items-start gap-2 ml-1">
+              <span className="text-blue-400 font-bold">•</span>
+              <div className="flex-1 break-words">{renderInlineFormatting(content)}</div>
+            </div>
+          );
+        }
+
+        // Empty spacer
+        if (!trimmed) {
+          return <div key={idx} className="h-1" />;
+        }
+
+        return (
+          <p key={idx} className="break-words">
+            {renderInlineFormatting(content)}
+          </p>
+        );
+      })}
+    </div>
+  );
+}
+
 // Default welcome message
 const initialMessage = {
   sender: "ai",
-  text: "Hello! I am the RAC AI Assistant. Ask me about cars, specifications, prices, or recommendations — I am ready to help!",
+  text: "Halo! Saya adalah RAC AI Assistant. Tanyakan apapun tentang rekomendasi mobil, spesifikasi mesin, perbandingan harga, atau simulasi kredit — saya siap membantu!",
 };
 
 function FloatAIContent() {
@@ -209,32 +327,47 @@ function FloatAIContent() {
                       : "rounded-bl-none border border-white/10 bg-white/5 text-gray-200"
                     }`}
                 >
-                  <p className="break-words break-all whitespace-pre-wrap">
-                    {message.text}
-                  </p>
+                  <FormattedMessage text={message.text} />
 
                   {/* Recommended Cars List */}
                   {message.items && message.items.length > 0 && (
-                    <div className="mt-2.5 space-y-2.5">
-                      {message.items.map((item, itemIndex) => (
-                        <div
-                          key={item.carId || itemIndex}
-                          className="border-t border-white/10 pt-2 first:border-t-0 first:pt-0"
-                        >
-                          <p className="font-bold text-white">
-                            {itemIndex + 1}. {item.name}
-                          </p>
-                          <Link
-                            to={`/cars/${item.carId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-blue-400 hover:underline mt-0.5"
+                    <div className="mt-3 space-y-2 border-t border-white/10 pt-2.5">
+                      {message.items.map((item, itemIndex) => {
+                        const targetId = item.slug || item.carId;
+                        const priceFormatted = Number(item.basePrice)
+                          ? `Rp ${Number(item.basePrice).toLocaleString("id-ID")}`
+                          : null;
+
+                        return (
+                          <div
+                            key={item.carId || itemIndex}
+                            className="rounded-xl border border-white/10 bg-white/5 p-2.5 hover:border-blue-500/30 transition-all"
                           >
-                            <span>View product details</span>
-                            <PiArrowSquareOut className="text-xs" />
-                          </Link>
-                        </div>
-                      ))}
+                            <div className="flex items-baseline justify-between gap-2">
+                              <p className="font-bold text-white text-xs">
+                                {itemIndex + 1}. {item.name}
+                              </p>
+                              {priceFormatted && (
+                                <span className="text-[10px] font-semibold text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">
+                                  {priceFormatted}
+                                </span>
+                              )}
+                            </div>
+                            <div className="mt-1.5 flex items-center justify-between">
+                              <span className="text-[10px] text-gray-400">
+                                {[item.brand, item.type].filter(Boolean).join(" • ")}
+                              </span>
+                              <Link
+                                to={`/cars/${targetId}`}
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+                              >
+                                <span>View product details</span>
+                                <PiArrowSquareOut className="text-xs" />
+                              </Link>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
