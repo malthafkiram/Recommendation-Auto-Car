@@ -1,6 +1,7 @@
 import { getMockResponse } from "./mock";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const RAW_BASE_URL = import.meta.env.VITE_API_URL || "https://recommendation-auto-car-production.up.railway.app";
+const BASE_URL = RAW_BASE_URL.replace(/\/+$/, "");
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 export const ACCESS_TOKEN_KEY = "access_token";
 
